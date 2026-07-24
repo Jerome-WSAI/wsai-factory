@@ -79,7 +79,7 @@ Rule: responses contain only files present under stock; no generated code.
 - Python argparse: https://docs.python.org/3/library/argparse.html
 - Python json: https://docs.python.org/3/library/json.html
 - Python ast: https://docs.python.org/3/library/ast.html
-- Python http.server (local stock serve): https://docs.python.org/3/library/http.server.html
+- Python http.server (local stock serve + Render handoff): https://docs.python.org/3/library/http.server.html
 - Production chatbot UI: https://wsai-factory-chatbot.vercel.app
 - Cloud Agents API: https://cursor.com/docs/cloud-agent/api/endpoints
 - Cursor API keys: https://cursor.com/dashboard/api

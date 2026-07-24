@@ -62,11 +62,43 @@ def run_align(job_id: str) -> None:
                     "align",
                 )
             url = require_string(dep, "url", "align")
+            content_source = dep.get("content_source")
+            if not isinstance(content_source, str) or content_source.strip() == "":
+                raise PipelineError(
+                    "missing_content_source",
+                    f"docs_manifest entry for {name} missing content_source "
+                    "(official README fetch required; meta-only docs forbidden)",
+                    "align",
+                )
+            docs_dir = Path(state["paths"]["docs"]) / "official_docs" / "npm" / name.replace(
+                "/", "__"
+            )
+            instructions_path = docs_dir / "instructions.md"
+            if not instructions_path.is_file():
+                raise PipelineError(
+                    "missing_instructions",
+                    f"missing instructions.md for {name}: {instructions_path}",
+                    "align",
+                )
+            instructions_text = instructions_path.read_text(encoding="utf-8")
+            if "wsai-factory: fetched official excerpt" not in instructions_text:
+                raise PipelineError(
+                    "invented_or_thin_docs",
+                    f"instructions.md for {name} lacks fetched-official marker",
+                    "align",
+                )
+            if len(instructions_text.strip()) < 120:
+                raise PipelineError(
+                    "thin_docs",
+                    f"instructions.md for {name} too short to be real official excerpt",
+                    "align",
+                )
             rules.append(
                 {
                     "id": f"doc-present:{name}",
                     "status": "pass",
                     "evidence": url,
+                    "content_source": content_source.strip(),
                 }
             )
         stripped = Path(state["paths"]["stripped"])

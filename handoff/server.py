@@ -117,32 +117,96 @@ def create_agent_run(
         },
         method="POST",
     )
-    try:
-        with urllib.request.urlopen(request, timeout=60) as response:
-            status = response.getcode()
-            raw = response.read().decode("utf-8")
-            if status < 200 or status >= 300:
+    attempts = 3
+    last_error: BaseException | None = None
+    raw = ""
+    for attempt in range(1, attempts + 1):
+        try:
+            with urllib.request.urlopen(request, timeout=60) as response:
+                status = response.getcode()
+                raw_bytes = response.read()
+                try:
+                    raw = raw_bytes.decode("utf-8")
+                except UnicodeDecodeError as exc:
+                    raise HandoffError(
+                        "cursor_not_utf8",
+                        "Cursor run create body is not UTF-8",
+                        502,
+                    ) from exc
+                if status < 200 or status >= 300:
+                    raise HandoffError(
+                        "cursor_bad_status",
+                        f"Cursor run create HTTP {status}: {raw[:500]}",
+                        502,
+                    )
+            last_error = None
+            break
+        except HandoffError:
+            raise
+        except urllib.error.HTTPError as exc:
+            try:
+                err_body = exc.read().decode("utf-8")
+            except UnicodeDecodeError:
+                err_body = "<non-utf8 body>"
+            last_error = exc
+            print(
+                json.dumps(
+                    {
+                        "level": "warning",
+                        "event": "cursor_retry",
+                        "attempt": attempt,
+                        "attempts": attempts,
+                        "http_status": exc.code,
+                        "error": err_body[:200],
+                    },
+                    ensure_ascii=False,
+                ),
+                flush=True,
+            )
+            if attempt == attempts:
                 raise HandoffError(
-                    "cursor_bad_status",
-                    f"Cursor run create HTTP {status}: {raw[:500]}",
+                    "cursor_http_error",
+                    f"Cursor run create HTTP {exc.code} after {attempts} attempts: "
+                    f"{err_body[:800]}",
                     502,
-                )
-    except urllib.error.HTTPError as exc:
-        err_body = exc.read().decode("utf-8", errors="replace")
-        raise HandoffError(
-            "cursor_http_error",
-            f"Cursor run create HTTP {exc.code}: {err_body[:800]}",
-            502,
-        ) from exc
-    except urllib.error.URLError as exc:
+                ) from exc
+        except urllib.error.URLError as exc:
+            last_error = exc
+            print(
+                json.dumps(
+                    {
+                        "level": "warning",
+                        "event": "cursor_retry",
+                        "attempt": attempt,
+                        "attempts": attempts,
+                        "error": str(exc),
+                    },
+                    ensure_ascii=False,
+                ),
+                flush=True,
+            )
+            if attempt == attempts:
+                raise HandoffError(
+                    "cursor_network",
+                    f"Cursor API network failure after {attempts} attempts: {exc}",
+                    502,
+                ) from exc
+    if last_error is not None:
         raise HandoffError(
             "cursor_network",
-            f"Cursor API network failure: {exc}",
+            f"Cursor API failed after retries: {last_error}",
             502,
-        ) from exc
+        )
     if raw.strip() == "":
         raise HandoffError("cursor_empty", "Cursor run create returned empty body", 502)
-    parsed = json.loads(raw)
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise HandoffError(
+            "cursor_bad_json",
+            f"Cursor run create returned non-JSON: {exc}",
+            502,
+        ) from exc
     if not isinstance(parsed, dict):
         raise HandoffError("cursor_bad_shape", "Cursor run response must be object", 502)
     return parsed
@@ -185,17 +249,12 @@ def handle_handoff(payload: Mapping[str, object], webhook_key: str, auth_header:
     prompt = build_prompt(payload)
     run = create_agent_run(cursor_key, agent_id, prompt)
     run_id = run.get("id")
-    if not isinstance(run_id, str) or run_id == "":
-        # some responses nest under "run"
-        nested = run.get("run")
-        if isinstance(nested, dict):
-            run_id = nested.get("id")
-        if not isinstance(run_id, str) or run_id == "":
-            raise HandoffError(
-                "cursor_missing_run_id",
-                f"run id missing in response keys={list(run.keys())}",
-                502,
-            )
+    if not isinstance(run_id, str) or run_id.strip() == "":
+        raise HandoffError(
+            "cursor_missing_run_id",
+            f"run id missing at top level; keys={list(run.keys())}",
+            502,
+        )
     return {
         "ok": True,
         "action": "agent_run",
