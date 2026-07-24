@@ -1,0 +1,15 @@
+{
+  "job_id": "20260724T223721Z-vl-min1-aee210ae",
+  "created_at": "2026-07-24T22:37:21+00:00",
+  "code_root": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T223721Z-vl-min1-aee210ae/03-aligned",
+  "units": [
+    {
+      "module_name": "src",
+      "source_paths": [
+        "src/app.py"
+      ],
+      "evidence": "existing_directory"
+    }
+  ],
+  "rule": "units_only_from_existing_directories_or_single_root"
+}

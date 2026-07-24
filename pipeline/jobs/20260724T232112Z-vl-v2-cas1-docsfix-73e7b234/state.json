@@ -1,0 +1,28 @@
+{
+  "job_id": "20260724T232112Z-vl-v2-cas1-docsfix-73e7b234",
+  "slug": "vl-v2-cas1-docsfix",
+  "stage": "stripped",
+  "status": "ok",
+  "created_at": "2026-07-24T23:21:12+00:00",
+  "updated_at": "2026-07-24T23:21:12+00:00",
+  "paths": {
+    "inbox": "E:/WSAI/WSAI-Factory/pipeline/inbox/vl-v2-cas1-docsfix",
+    "stripped": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T232112Z-vl-v2-cas1-docsfix-73e7b234/01-stripped",
+    "docs": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T232112Z-vl-v2-cas1-docsfix-73e7b234/02-docs",
+    "aligned": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T232112Z-vl-v2-cas1-docsfix-73e7b234/03-aligned",
+    "modules": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T232112Z-vl-v2-cas1-docsfix-73e7b234/04-modules",
+    "stock": "E:/WSAI/WSAI-Factory/pipeline/stock",
+    "failed": "E:/WSAI/WSAI-Factory/pipeline/_failed/20260724T232112Z-vl-v2-cas1-docsfix-73e7b234"
+  },
+  "inventory_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T232112Z-vl-v2-cas1-docsfix-73e7b234/inventory.json",
+  "docs_manifest_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T232112Z-vl-v2-cas1-docsfix-73e7b234/02-docs/docs_manifest.json",
+  "align_report_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T232112Z-vl-v2-cas1-docsfix-73e7b234/03-aligned/align_report.json",
+  "module_plan_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T232112Z-vl-v2-cas1-docsfix-73e7b234/module_plan.json",
+  "webhook_last_stage": "",
+  "git_commit": "",
+  "error": {
+    "code": "",
+    "message": "",
+    "at_stage": ""
+  }
+}

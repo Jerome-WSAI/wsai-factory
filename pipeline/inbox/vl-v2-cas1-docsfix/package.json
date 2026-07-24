@@ -1,0 +1,6 @@
+﻿{
+  "name": "vl-v2-cas1-docsfix",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": { "ms": "2.1.3" }
+}

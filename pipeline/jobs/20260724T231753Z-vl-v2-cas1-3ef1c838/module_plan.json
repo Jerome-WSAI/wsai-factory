@@ -1,0 +1,16 @@
+{
+  "job_id": "20260724T231753Z-vl-v2-cas1-3ef1c838",
+  "created_at": "2026-07-24T23:17:53+00:00",
+  "code_root": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T231753Z-vl-v2-cas1-3ef1c838/03-aligned",
+  "units": [
+    {
+      "module_name": "src",
+      "source_paths": [
+        "src/app.py",
+        "src/timer.js"
+      ],
+      "evidence": "existing_directory"
+    }
+  ],
+  "rule": "units_only_from_existing_directories_or_single_root"
+}

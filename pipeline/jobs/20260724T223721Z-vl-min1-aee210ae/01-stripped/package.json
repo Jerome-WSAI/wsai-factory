@@ -1,0 +1,6 @@
+﻿{
+  "name": "vl-min1",
+  "dependencies": {
+    "ms": "^2.1.3"
+  }
+}
