@@ -1,0 +1,11 @@
+{
+  "name": "ms",
+  "ecosystem": "npm",
+  "version": "2.1.3",
+  "url": "https://github.com/vercel/ms#readme",
+  "registry_url": "https://registry.npmjs.org/ms",
+  "fetched_at": "2026-07-24T23:26:10+00:00",
+  "source": "registry.npmjs.org",
+  "doc_status": "resolved",
+  "content_source": "https://raw.githubusercontent.com/vercel/ms/main/README.md"
+}

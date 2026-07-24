@@ -1,0 +1,9 @@
+﻿{
+  "name": "duration-toolkit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Software: convert human duration labels to milliseconds",
+  "dependencies": {
+    "ms": "2.1.3"
+  }
+}

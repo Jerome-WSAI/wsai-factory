@@ -1,0 +1,14 @@
+{
+  "job_id": "20260724T232610Z-duration-toolkit-34dddcde",
+  "created_at": "2026-07-24T23:26:10+00:00",
+  "mode": "local_structural",
+  "rules": [
+    {
+      "id": "doc-present:ms",
+      "status": "pass",
+      "evidence": "https://github.com/vercel/ms#readme",
+      "content_source": "https://raw.githubusercontent.com/vercel/ms/main/README.md"
+    }
+  ],
+  "note": "Local align copies code and verifies resolved official doc URLs exist in manifest; deep semantic conform is Automation align.md"
+}

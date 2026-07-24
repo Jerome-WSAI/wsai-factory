@@ -83,8 +83,9 @@ export default function HomePage() {
           });
           setOutput(
             [
+              "Logiciel reçu depuis le stock (verbatim) :",
               data.result.note,
-              `hits: ${data.result.hit_count}`,
+              `fichiers: ${data.result.hit_count}`,
               "",
               ...blocks,
             ].join("\n\n"),
@@ -102,24 +103,25 @@ export default function HomePage() {
     <main className="shell">
       <section className="hero">
         <p className="brand">WSAI Factory</p>
-        <h1>Stock chatbot</h1>
+        <h1>Demande un logiciel</h1>
         <p className="lede">
-          Interroge uniquement les modules déjà rangés dans le stock. Aucune
-          ligne de code n’est inventée.
+          Écris ce que tu veux. Le frontend ne cherche que dans le stock déjà
+          ingéré — tu reçois les fichiers tels quels, jamais du code inventé.
         </p>
-        <form className="query" onSubmit={onSubmit}>
-          <label htmlFor="q">Requête</label>
+        <form className="query" onSubmit={onSubmit} data-testid="software-demand-form">
+          <label htmlFor="q">Ta demande</label>
           <textarea
             id="q"
             name="q"
+            data-testid="software-demand-input"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             required
             rows={3}
-            placeholder="ex. hello, src/app.py, cas1"
+            placeholder='ex. "scheduling software" ou "convert human duration labels"'
           />
-          <button type="submit" disabled={pending}>
-            {pending ? "Recherche…" : "Chercher dans le stock"}
+          <button type="submit" disabled={pending} data-testid="software-demand-submit">
+            {pending ? "Recherche…" : "Recevoir le logiciel"}
           </button>
         </form>
       </section>
@@ -141,8 +143,12 @@ export default function HomePage() {
           ))}
         </ul>
       </section>
-      <section className="result" aria-live="polite">
-        <pre>{output === "" ? "Les résultats du stock apparaîtront ici." : output}</pre>
+      <section className="result" aria-live="polite" data-testid="software-demand-result">
+        <pre>
+          {output === ""
+            ? "Le logiciel demandé apparaîtra ici après envoi."
+            : output}
+        </pre>
       </section>
     </main>
   );
