@@ -31,4 +31,4 @@ python tools/push_inbox.py --slug <slug> --commit yes --push yes
 
 ## Repo
 
-https://github.com/Jerome-WSwissAI/wsai-factory
+https://github.com/Jerome-WSAI/wsai-factory

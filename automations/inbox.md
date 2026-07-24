@@ -1,7 +1,7 @@
 ﻿# Automation: cloud inbox ingest (Push to branch)
 
 ## Trigger
-Cursor Automations: **Push to branch** on `Jerome-WSwissAI/wsai-factory` when paths under `pipeline/inbox/**` change (not `_processed`).
+Cursor Automations: **Push to branch** on `Jerome-WSAI/wsai-factory` when paths under `pipeline/inbox/**` change (not `_processed`).
 
 ## Goal
 Human or `tools/push_inbox.py` commits a full project into `pipeline/inbox/<slug>/`. Cloud agent processes it.

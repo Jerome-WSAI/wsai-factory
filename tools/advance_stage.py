@@ -220,7 +220,7 @@ def main() -> None:
             "from_stage": state["stage"],
             "to_stage": args.to_stage,
             "inventory_path": state["inventory_path"],
-            "repo": "Jerome-WSwissAI/wsai-factory",
+            "repo": "Jerome-WSAI/wsai-factory",
         }
         updated = state
         if args.webhook_url != "NONE":
