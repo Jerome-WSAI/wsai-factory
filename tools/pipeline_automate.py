@@ -7,13 +7,14 @@ import json
 from pathlib import Path
 
 from apply_modules_stock import apply_and_stock
-from pipeline_lib import INBOX_ROOT, PipelineError, assert_slug
+from pipeline_lib import INBOX_ROOT, PIPELINE_ROOT, PipelineError, REPO_ROOT, assert_slug
 from stage_align_local import run_align
 from stage_docs_local import run_docs
+from sync_chatbot_stock import sync_chatbot_stock
 from watch_inbox_once import process_inbox_entry
 
 
-def run_slug(slug: str, polls: int, interval_sec: float) -> dict[str, object]:
+def run_slug(slug: str, polls: int, interval_sec: float) -> dict[str, str | int]:
     assert_slug(slug)
     slug_dir = INBOX_ROOT / slug
     if not slug_dir.is_dir():
@@ -28,11 +29,14 @@ def run_slug(slug: str, polls: int, interval_sec: float) -> dict[str, object]:
     run_docs(job_id)
     run_align(job_id)
     apply_and_stock(job_id)
+    chatbot_stock = REPO_ROOT / "chatbot" / "stock"
+    sync_info = sync_chatbot_stock(PIPELINE_ROOT / "stock", chatbot_stock)
     return {
         "job_id": job_id,
         "slug": slug,
         "job_dir": str(job_dir),
         "stage": "stock",
+        "chatbot_stock_files": int(sync_info["file_count"]),
     }
 
 

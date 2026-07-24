@@ -47,6 +47,18 @@ MANIFEST_NAMES = frozenset(
     }
 )
 
+LOCKFILE_ONLY_NAMES = frozenset(
+    {
+        "package-lock.json",
+        "pnpm-lock.yaml",
+        "yarn.lock",
+        "Pipfile.lock",
+        "Cargo.lock",
+        "go.sum",
+        "Gemfile.lock",
+    }
+)
+
 CODE_SUFFIXES = frozenset(
     {
         ".py",
@@ -133,7 +145,8 @@ def collect_inventory(root: Path) -> dict[str, object]:
         rel = path.relative_to(root).as_posix()
         if path.name in MANIFEST_NAMES:
             manifests.append(rel)
-            dependencies.extend(parse_manifest_deps(path))
+            if path.name not in LOCKFILE_ONLY_NAMES:
+                dependencies.extend(parse_manifest_deps(path))
         suffix = path.suffix.lower()
         if suffix in CODE_SUFFIXES:
             code_files.append(rel)
@@ -244,7 +257,11 @@ def parse_manifest_deps(path: Path) -> list[dict[str, str]]:
             }
         )
         return out
-    return out
+    raise PipelineError(
+        "unsupported_manifest_parser",
+        f"no dependency parser for manifest {name!r} at {path}",
+        "inventory",
+    )
 
 
 def should_delete_doc(path: Path, root: Path) -> bool:

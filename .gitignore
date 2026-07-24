@@ -23,7 +23,23 @@ pipeline/_failed/
 .cursor/loop-runs/
 .cursor/hooks.json.verify-loop.bak
 .cursor/hooks/verify-loop-stop-*.py
+.cursor/playwright-cursor-profile/
+.cursor/playwright-out/
+
+# Root tooling (Playwright helper)
+/node_modules/
+/package-lock.json
+/package.json
+.env
+.env.*
+!.env.example
+
 
 # OS
 Thumbs.db
 Desktop.ini
+
+.cursor/pw-cursor-out/
+.cursor/pw-cursor-profile/
+.cursor/pw-cursor-state.json
+.verify-cas3-*

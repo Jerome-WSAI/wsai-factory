@@ -24,27 +24,50 @@ from pipeline_lib import (
 
 
 def fetch_json(url: str) -> dict[str, object]:
+    # Official urllib: https://docs.python.org/3/library/urllib.request.html
     request = urllib.request.Request(
         url,
         headers={"Accept": "application/json", "User-Agent": "wsai-factory-docs/1.0"},
         method="GET",
     )
-    try:
-        with urllib.request.urlopen(request, timeout=30) as response:
-            status = response.getcode()
-            if status < 200 or status >= 300:
-                raise PipelineError(
-                    "http_bad_status",
-                    f"GET {url} returned HTTP {status}",
-                    "docs",
-                )
-            body = response.read().decode("utf-8")
-    except urllib.error.URLError as exc:
+    attempts = 3
+    last_error: BaseException | None = None
+    body = ""
+    for attempt in range(1, attempts + 1):
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                status = response.getcode()
+                if status < 200 or status >= 300:
+                    raise PipelineError(
+                        "http_bad_status",
+                        f"GET {url} returned HTTP {status}",
+                        "docs",
+                    )
+                body = response.read().decode("utf-8")
+            last_error = None
+            break
+        except urllib.error.URLError as exc:
+            last_error = exc
+            print(
+                json.dumps(
+                    {
+                        "level": "warning",
+                        "event": "http_retry",
+                        "url": url,
+                        "attempt": attempt,
+                        "attempts": attempts,
+                        "error": str(exc),
+                    },
+                    ensure_ascii=False,
+                ),
+                flush=True,
+            )
+    if last_error is not None:
         raise PipelineError(
             "http_failed",
-            f"GET {url} failed: {exc}",
+            f"GET {url} failed after {attempts} attempts: {last_error}",
             "docs",
-        ) from exc
+        ) from last_error
     data = json.loads(body)
     if not isinstance(data, dict):
         raise PipelineError(
@@ -68,9 +91,16 @@ def resolve_npm(name: str, version: str) -> dict[str, str]:
         repo_url = repository.get("url")
         if isinstance(repo_url, str) and repo_url != "":
             official = repo_url.replace("git+", "").replace("ssh://git@", "https://")
+            if official.startswith("git@"):
+                official = official.replace(":", "/").replace("git@", "https://")
+            if official.endswith(".git"):
+                official = official[: -len(".git")]
     if official == "":
-        # package page on npmjs.com is vendor-official for the package
-        official = f"https://www.npmjs.com/package/{name}"
+        raise PipelineError(
+            "npm_no_official_url",
+            f"npm package {name!r} has no homepage/repository URL in registry metadata",
+            "docs",
+        )
     fetched_at = utc_now_iso()
     return {
         "name": name,

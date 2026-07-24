@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: wsai-factory-handoff
+    runtime: python
+    plan: pro_ultra
+    region: frankfurt
+    branch: main
+    rootDir: handoff
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: WSAI_FACTORY_WEBHOOK_KEY
+        sync: false
+      - key: CURSOR_API_KEY
+        sync: false
+      - key: FACTORY_AGENT_INBOX
+        sync: false
+      - key: FACTORY_AGENT_DOCS
+        sync: false
+      - key: FACTORY_AGENT_ALIGN
+        sync: false
+      - key: FACTORY_AGENT_MODULARIZE
+        sync: false

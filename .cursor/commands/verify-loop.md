@@ -95,10 +95,7 @@ Si cleanup échoue : signale l’erreur clairement ; ne prétends pas que c’es
 ## 4. Après cleanup — parler à l’utilisateur
 
 Réponse courte en français :
-
-- ce qui a été accompli par rapport à la demande ;
-- preuves principales (commandes / résultats) ;
-- ce qui reste éventuel (sinon rien).
+- Voici ö
 
 Pas de jargon. Pas de roman. Ne repars pas en boucle sauf nouvelle commande.
 
