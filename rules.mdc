@@ -1,0 +1,154 @@
+# global.rules
+
+## code.style
+
+- comments must be english.
+- adhere to DRY: do not duplicate code, tests, or documentation.
+- functional programming is preferred; OOP only for connectors/interfaces to external systems.
+- pure functions only: never mutate inputs or global state, only modify return value.
+- adhere to KISS, YAGNI.
+- prefer simple, native, vendor-recommended solutions; no premature abstraction.
+- mandatory strict typing (returns, variables, collections, complex data); at runtime, validate external/api data, require needed fields, ignore unrelated fields, prefer structured models, avoid weak generic types (`Any`, `unknown`, `List[Dict[str,Any]]`).
+- check for existing logic before adding new code.
+- default parameter values are forbidden; all params explicit.
+- functions must be single-purpose: no flags, no mode switches; if multimode is needed, prompt user.
+
+## error.handling
+
+- errors must be raised explicitly; never ignored.
+- use specific, descriptive error types only.
+- never use catch-all exception handlers that mask the root cause.
+- fallback, symptom-masking, silent recovery forbidden unless explicitly requested; always fix the root cause, code must succeed or fail with clear error.
+- for external api/service: retry with warning, else raise last error.
+- error messages: must be actionable, specific, include what, why, params, response, status, and avoid generic "something went wrong".
+- logging: always use structured fields, no string interpolation of dynamic values.
+
+## libraries.dependencies
+
+- use modern, project-compatible, stable package management/libs/language; prefer vendor/default patterns (e.g, ESM).
+- dependencies must be installed in project env, not global.
+- dependencies: add/update via project config only, not ad hoc.
+- locally-installed deps: read local source code if needed, even if gitignored, never guess.
+
+## testing
+
+- adhere to repo test strategy, add only minimum useful tests for each change.
+- avoid test duplication; test only the minimum for new/changed behavior.
+- prioritize smoke/integration/e2e over narrow unit/regression; only test static text, prompts, config if behavior changes.
+- do not mock/fake by default; if possible, use real integrations (even with cost).
+- UI/test automation: stable/test/accessibility IDs only; never visible text; fail fast, no fallback clicking.
+
+## documentation
+
+- code is primary documentation: clear naming, types, docstrings.
+- docstrings inside code only; separate docs file only for irreducible concepts (1 file per topic).
+- never duplicate docs; reference source or use links.
+- record knowledge as current state only; no modification changelogs.
+
+## terminal
+
+- prefer non-interactive commands with flags; avoid interactive mode.
+- always use non-interactive git diff: `git --no-pager diff` or `git diff | cat`.
+
+## commits
+
+- never create git commits unless user asks.
+- prefer `git merge` over `git squash`, unless user instructs otherwise.
+- user's uncommitted changes = review state; user reviews diff before commit.
+- keep everything uncommitted unless asked, so diffs stay clear and reviewable.
+
+## workflow
+
+- never duplicate logic between workflow, subagents, instructions, or other rule sections: always reference common rules.
+- workflow compression: only for coupled, single-track work where next step depends on last finding.
+- for review/debug/analysis: never force code change once evidence is found.
+1. main agent must always explore first: read files, trace logic, search patterns, build understanding.
+2. scan skills for direct/adjacent matches before choosing path; if uncertain, load/check skill.
+3. after main-agent scoping, pick one execution path:
+   - single/dependent steps: main agent only.
+   - small reads/searches: parallel tool calls in main agent.
+   - 2+ independent tracks: launch all subagents simultaneously in a batch.
+   - (conflict): use 2+ subagents or none. never launch exactly 1 subagent.
+4. always synthesize findings, refresh target files if context is stale.
+5. implement the smallest correct change.
+6. check what validation tools exist and run the narrowest relevant check.
+
+## subagents
+
+- never duplicate subagent rules elsewhere; always reference these.
+- always use either 2+ subagents or none. never exactly one.
+- main agent must work and scope first, delegate only after.
+- subagent calls block main agent, so 1 subagent = sequential, not parallel; batch all subagents together.
+- identify + draft 1 prompt per subagent track, each for distinct file/area/question; remain in main agent until 2+ prompts ready.
+- tracks must be independent; if one depends on output of another, handle both in main.
+- prompts must define a specific required return format (not open-ended "explore").
+- keep fast scoping, data/formatting/generation, and simple I/O in main agent.
+- never offload formatting/transformation/generation to subagents for data already in main-agent context.
+- after all subagents return, synthesize, fill gaps in main agent as needed.
+
+# global.instructions
+
+- always overridden by more-local instructions if present.
+- never duplicate rules between global.rules and global.instructions; refer to section instead.
+- never fabricate: paths, commits, apis, config keys, env vars, test results, capabilities. if gap exists, state plainly.
+- never game validation by weakening, narrowing, skipping.
+- never expose secrets via logs/export/embed/quote. if found, note and stop immediately.
+- never propose destructive commands without explicit user approval.
+- be direct: do not use flattery, filler, or affirm incorrect information.
+
+## uncertainty
+
+- ask when intent is ambiguous.
+- ask before changing: behavior, API/UX, naming, persistence, auth, deps, config, compatibility.
+- ask one targeted question; if bundled, ensure all are independent.
+- only skip asking when ambiguity is low-risk and conventions make the choice clear; clearly state the assumption.
+
+example: user="Make it faster" => you ask "Do you mean startup time, response, or RAM?".
+
+## evidence
+
+- gather evidence proportional to risk.
+- trivial edit: inspect file/context.
+- behavioral/api/dependency/infra: trace execution, call sites, constraints, regression risk.
+- check local code/imports/config/types/tests/patterns before assuming.
+- if local dependency/generated code can't be read, look upstream for docs/source.
+- external verification > self-review. Prefer fresh tests over re-reading.
+- always state uncertainty if you cannot confirm something.
+- proceed only when path/constraints/regression risk are clear for a minimal correct change. if not, ask or report gap.
+
+## testing
+
+- reference rule: do not duplicate rules from code.style/testing section.
+- preserve all existing tests; only update when behavior changes; never change tested behavior silently.
+- validation must be proportional: docs/text readback; type/api gets typecheck/test; runtime/ui gets targeted test, lint, build.
+- if existing checks fail, state so (do not blame new code).
+- if verification fails after change, make one targeted fix if cause is clear; else stop and report.
+- if full validation is impractical, run the narrowest relevant check and state what is not checked.
+
+## change.constraints
+
+- do only what is asked, never expand scope unless needed.
+- always reuse abstractions/helpers/deps/style/names/structure/error-handling.
+- only make the smallest change; do not change working code unless justified.
+- note adjacent issues but only fix if required for requested change.
+- add new dependencies only when required; always prefer smallest.
+
+## safety.infrastructure
+
+- use existing error propagation patterns; never swallow errors.
+- check for: injection, path traversal, unvalidated input, auth bypass, secret leak.
+- for infra work: always inspect environment/services/configs/logs before changing.
+- validate config before reload/restart; prefer reload.
+- env-specific infra names/paths/deploy/reload must be local instructions only.
+
+## git.prs
+
+- commit only on explicit request.
+- commit messages must state change and reason.
+- PRs: always single-concern and small.
+- never force-push to main/master.
+- never use `--no-verify` or `--no-gpg-sign`.
+
+## completion
+
+- only declare complete after: change fixes issue, validation/checks done or gaps stated, no unintended side effects, and no secrets exposed/added.

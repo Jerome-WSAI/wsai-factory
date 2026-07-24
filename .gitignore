@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Pipeline noise only (inbox/jobs/stock ARE tracked for Cursor Cloud Automations)
+pipeline/**/node_modules/
+pipeline/**/dist/
+pipeline/**/build/
+pipeline/**/target/
+pipeline/**/.venv/
+pipeline/**/venv/
+pipeline/**/__pycache__/
+pipeline/**/.next/
+pipeline/**/.turbo/
+pipeline/inbox/_processed/
+pipeline/_failed/
+
+# Cursor local ephemeral
+.cursor/corpus/
+.cursor/hooks/state/
+.cursor/loop-runs/
+.cursor/hooks.json.verify-loop.bak
+.cursor/hooks/verify-loop-stop-*.py
+
+# OS
+Thumbs.db
+Desktop.ini

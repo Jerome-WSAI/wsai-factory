@@ -1,0 +1,28 @@
+{
+  "job_id": "20260724T210728Z-e2e-prod2-6f0ba253",
+  "slug": "e2e-prod2",
+  "stage": "stock",
+  "status": "ok",
+  "created_at": "2026-07-24T21:07:28+00:00",
+  "updated_at": "2026-07-24T21:07:28+00:00",
+  "paths": {
+    "inbox": "E:/WSAI/WSAI-Factory/pipeline/inbox/e2e-prod2",
+    "stripped": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210728Z-e2e-prod2-6f0ba253/01-stripped",
+    "docs": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210728Z-e2e-prod2-6f0ba253/02-docs",
+    "aligned": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210728Z-e2e-prod2-6f0ba253/03-aligned",
+    "modules": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210728Z-e2e-prod2-6f0ba253/04-modules",
+    "stock": "E:/WSAI/WSAI-Factory/pipeline/stock",
+    "failed": "E:/WSAI/WSAI-Factory/pipeline/_failed/20260724T210728Z-e2e-prod2-6f0ba253"
+  },
+  "inventory_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210728Z-e2e-prod2-6f0ba253/inventory.json",
+  "docs_manifest_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210728Z-e2e-prod2-6f0ba253/02-docs/docs_manifest.json",
+  "align_report_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210728Z-e2e-prod2-6f0ba253/03-aligned/align_report.json",
+  "module_plan_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210728Z-e2e-prod2-6f0ba253/module_plan.json",
+  "webhook_last_stage": "",
+  "git_commit": "",
+  "error": {
+    "code": "",
+    "message": "",
+    "at_stage": ""
+  }
+}

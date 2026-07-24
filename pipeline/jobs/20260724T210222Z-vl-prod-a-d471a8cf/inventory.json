@@ -1,0 +1,29 @@
+{
+  "job_id": "20260724T210222Z-vl-prod-a-d471a8cf",
+  "created_at": "2026-07-24T21:02:22+00:00",
+  "root": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210222Z-vl-prod-a-d471a8cf/01-stripped",
+  "languages": [
+    "py"
+  ],
+  "manifests": [
+    "package.json"
+  ],
+  "dependencies": [
+    {
+      "name": "react",
+      "ecosystem": "npm",
+      "version": "^19.0.0",
+      "source": "manifest",
+      "doc_status": "pending"
+    }
+  ],
+  "code_files": [
+    "src/main.py"
+  ],
+  "removed_paths": [
+    "README.md",
+    "docs/x.md",
+    "docs/"
+  ],
+  "preserved_comment_markers": []
+}

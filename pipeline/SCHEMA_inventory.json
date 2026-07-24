@@ -1,0 +1,20 @@
+# Inventory entry (written by strip_and_inventory.py)
+{
+  "job_id": "",
+  "created_at": "",
+  "root": "",
+  "languages": [],
+  "manifests": [],
+  "dependencies": [
+    {
+      "name": "",
+      "ecosystem": "npm|pypi|crates|go|unknown",
+      "version": "",
+      "source": "manifest|lock|import",
+      "doc_status": "pending|resolved|unresolved"
+    }
+  ],
+  "code_files": [],
+  "removed_paths": [],
+  "preserved_comment_markers": []
+}

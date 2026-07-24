@@ -1,0 +1,10 @@
+{
+  "name": "lodash",
+  "ecosystem": "npm",
+  "version": "^4.17.21",
+  "url": "https://lodash.com/",
+  "registry_url": "https://registry.npmjs.org/lodash",
+  "fetched_at": "2026-07-24T21:07:28+00:00",
+  "source": "registry.npmjs.org",
+  "doc_status": "resolved"
+}

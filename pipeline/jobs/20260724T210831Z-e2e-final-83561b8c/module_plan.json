@@ -1,0 +1,22 @@
+{
+  "job_id": "20260724T210831Z-e2e-final-83561b8c",
+  "created_at": "2026-07-24T21:08:32+00:00",
+  "code_root": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210831Z-e2e-final-83561b8c/03-aligned",
+  "units": [
+    {
+      "module_name": "lib",
+      "source_paths": [
+        "lib/b.py"
+      ],
+      "evidence": "existing_directory"
+    },
+    {
+      "module_name": "src",
+      "source_paths": [
+        "src/a.py"
+      ],
+      "evidence": "existing_directory"
+    }
+  ],
+  "rule": "units_only_from_existing_directories_or_single_root"
+}

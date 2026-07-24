@@ -1,0 +1,28 @@
+{
+  "job_id": "20260724T204625Z-smoke-demo-a1df6605",
+  "slug": "smoke-demo",
+  "stage": "failed",
+  "status": "failed",
+  "created_at": "2026-07-24T20:46:25+00:00",
+  "updated_at": "2026-07-24T21:03:54+00:00",
+  "paths": {
+    "inbox": "E:/WSAI/WSAI-Factory/pipeline/inbox/smoke-demo",
+    "stripped": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T204625Z-smoke-demo-a1df6605/01-stripped",
+    "docs": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T204625Z-smoke-demo-a1df6605/02-docs",
+    "aligned": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T204625Z-smoke-demo-a1df6605/03-aligned",
+    "modules": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T204625Z-smoke-demo-a1df6605/04-modules",
+    "stock": "E:/WSAI/WSAI-Factory/pipeline/stock",
+    "failed": "E:/WSAI/WSAI-Factory/pipeline/_failed/20260724T204625Z-smoke-demo-a1df6605"
+  },
+  "inventory_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T204625Z-smoke-demo-a1df6605/inventory.json",
+  "docs_manifest_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T204625Z-smoke-demo-a1df6605/02-docs/docs_manifest.json",
+  "align_report_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T204625Z-smoke-demo-a1df6605/03-aligned/align_report.json",
+  "module_plan_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T204625Z-smoke-demo-a1df6605/module_plan.json",
+  "webhook_last_stage": "",
+  "git_commit": "",
+  "error": {
+    "code": "job_failed",
+    "message": "cannot advance a failed job; inspect pipeline/_failed",
+    "at_stage": "failed"
+  }
+}

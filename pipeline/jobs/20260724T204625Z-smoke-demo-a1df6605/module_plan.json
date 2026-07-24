@@ -1,0 +1,15 @@
+{
+  "job_id": "20260724T204625Z-smoke-demo-a1df6605",
+  "created_at": "2026-07-24T20:46:25+00:00",
+  "code_root": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T204625Z-smoke-demo-a1df6605/01-stripped",
+  "units": [
+    {
+      "module_name": "src",
+      "source_paths": [
+        "src/app.py"
+      ],
+      "evidence": "existing_directory"
+    }
+  ],
+  "rule": "units_only_from_existing_directories_or_single_root"
+}

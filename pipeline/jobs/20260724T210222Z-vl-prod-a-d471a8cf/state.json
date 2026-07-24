@@ -1,0 +1,28 @@
+{
+  "job_id": "20260724T210222Z-vl-prod-a-d471a8cf",
+  "slug": "vl-prod-a",
+  "stage": "failed",
+  "status": "failed",
+  "created_at": "2026-07-24T21:02:22+00:00",
+  "updated_at": "2026-07-24T21:04:06+00:00",
+  "paths": {
+    "inbox": "E:/WSAI/WSAI-Factory/pipeline/inbox/vl-prod-a",
+    "stripped": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210222Z-vl-prod-a-d471a8cf/01-stripped",
+    "docs": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210222Z-vl-prod-a-d471a8cf/02-docs",
+    "aligned": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210222Z-vl-prod-a-d471a8cf/03-aligned",
+    "modules": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210222Z-vl-prod-a-d471a8cf/04-modules",
+    "stock": "E:/WSAI/WSAI-Factory/pipeline/stock",
+    "failed": "E:/WSAI/WSAI-Factory/pipeline/_failed/20260724T210222Z-vl-prod-a-d471a8cf"
+  },
+  "inventory_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210222Z-vl-prod-a-d471a8cf/inventory.json",
+  "docs_manifest_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210222Z-vl-prod-a-d471a8cf/02-docs/docs_manifest.json",
+  "align_report_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210222Z-vl-prod-a-d471a8cf/03-aligned/align_report.json",
+  "module_plan_path": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210222Z-vl-prod-a-d471a8cf/module_plan.json",
+  "webhook_last_stage": "",
+  "git_commit": "",
+  "error": {
+    "code": "skip_forbidden",
+    "message": "must advance 'docs' -> 'aligned', not 'stock'",
+    "at_stage": "docs"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "job_id": "20260724T210728Z-e2e-prod2-6f0ba253",
+  "created_at": "2026-07-24T21:07:28+00:00",
+  "root": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T210728Z-e2e-prod2-6f0ba253/01-stripped",
+  "languages": [
+    "py"
+  ],
+  "manifests": [
+    "package.json"
+  ],
+  "dependencies": [
+    {
+      "name": "lodash",
+      "ecosystem": "npm",
+      "version": "^4.17.21",
+      "source": "manifest",
+      "doc_status": "pending"
+    }
+  ],
+  "code_files": [
+    "lib/y.py",
+    "src/x.py"
+  ],
+  "removed_paths": [
+    "README.md"
+  ],
+  "preserved_comment_markers": []
+}

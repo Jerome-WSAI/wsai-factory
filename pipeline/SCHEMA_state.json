@@ -1,0 +1,28 @@
+{
+  "job_id": "string-uuid-or-slug-timestamp",
+  "slug": "string-folder-name-from-inbox",
+  "stage": "inbox|stripped|docs|aligned|modularized|stock|failed",
+  "status": "pending|running|ok|failed",
+  "created_at": "ISO-8601",
+  "updated_at": "ISO-8601",
+  "paths": {
+    "inbox": "pipeline/inbox/<slug>",
+    "stripped": "pipeline/jobs/<job_id>/01-stripped",
+    "docs": "pipeline/jobs/<job_id>/02-docs",
+    "aligned": "pipeline/jobs/<job_id>/03-aligned",
+    "modules": "pipeline/jobs/<job_id>/04-modules",
+    "stock": "pipeline/stock",
+    "failed": "pipeline/_failed/<job_id>"
+  },
+  "inventory_path": "pipeline/jobs/<job_id>/inventory.json",
+  "docs_manifest_path": "pipeline/jobs/<job_id>/02-docs/docs_manifest.json",
+  "align_report_path": "pipeline/jobs/<job_id>/03-aligned/align_report.json",
+  "module_plan_path": "pipeline/jobs/<job_id>/module_plan.json",
+  "webhook_last_stage": "string-or-empty",
+  "git_commit": "string-or-empty",
+  "error": {
+    "code": "string-or-empty",
+    "message": "string-or-empty",
+    "at_stage": "string-or-empty"
+  }
+}

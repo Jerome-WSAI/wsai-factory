@@ -1,0 +1,31 @@
+{
+  "job_id": "20260724T204625Z-smoke-demo-a1df6605",
+  "created_at": "2026-07-24T20:46:25+00:00",
+  "root": "E:/WSAI/WSAI-Factory/pipeline/jobs/20260724T204625Z-smoke-demo-a1df6605/01-stripped",
+  "languages": [
+    "py"
+  ],
+  "manifests": [
+    "package.json"
+  ],
+  "dependencies": [
+    {
+      "name": "react",
+      "ecosystem": "npm",
+      "version": "^18.0.0",
+      "source": "manifest",
+      "doc_status": "pending"
+    }
+  ],
+  "code_files": [
+    "src/app.py"
+  ],
+  "removed_paths": [
+    "README.md",
+    "docs/guide.md",
+    "docs/"
+  ],
+  "preserved_comment_markers": [
+    "# SPDX-License-Identifier: MIT"
+  ]
+}
