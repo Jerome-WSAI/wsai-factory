@@ -72,7 +72,7 @@ def parse_stock_file(path: Path, stock_root: Path) -> StockFileHit:
     module = parts[1]
     relative_path = Path(*parts[1:]).as_posix()
     try:
-        content = path.read_text(encoding="utf-8")
+        content = path.read_text(encoding="utf-8-sig")
     except UnicodeDecodeError as exc:
         raise PipelineError(
             "stock_not_utf8",
