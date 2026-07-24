@@ -87,7 +87,7 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json({
       ok: true,
       result: {
-        stock_root: path.resolve(resolveStockRoot()).replace(/\\/g, "/"),
+        stock_root: "stock",
         module_count: modules.length,
         modules,
         note: "listing only; file contents served via POST /api/query from disk",

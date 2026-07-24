@@ -5,7 +5,6 @@ export type StockFileHit = {
   job_id: string;
   module: string;
   relative_path: string;
-  absolute_path: string;
   content: string;
 };
 
@@ -93,7 +92,6 @@ async function parseStockFile(
     job_id: jobId,
     module: moduleName,
     relative_path: relativePath,
-    absolute_path: path.resolve(filePath).replace(/\\/g, "/"),
     content,
   };
 }
@@ -132,7 +130,7 @@ export async function queryStock(query: string): Promise<StockQueryResult> {
   }
   return {
     query,
-    stock_root: path.resolve(stockRoot).replace(/\\/g, "/"),
+    stock_root: "stock",
     hit_count: hits.length,
     hits,
     note: "content is read verbatim from chatbot/stock (synced from pipeline/stock); no code is generated",

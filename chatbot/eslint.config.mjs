@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Synced pipeline stock is verbatim third-party code, not app source.
+    "stock/**",
   ]),
 ]);
 

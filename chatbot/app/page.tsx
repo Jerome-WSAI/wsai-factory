@@ -83,7 +83,7 @@ export default function HomePage() {
           });
           setOutput(
             [
-              "Logiciel reçu depuis le stock (verbatim) :",
+              "Fichiers stock (verbatim) :",
               data.result.note,
               `fichiers: ${data.result.hit_count}`,
               "",
@@ -103,13 +103,13 @@ export default function HomePage() {
     <main className="shell">
       <section className="hero">
         <p className="brand">WSAI Factory</p>
-        <h1>Demande un logiciel</h1>
+        <h1>Cherche dans le stock</h1>
         <p className="lede">
-          Écris ce que tu veux. Le frontend ne cherche que dans le stock déjà
-          ingéré — tu reçois les fichiers tels quels, jamais du code inventé.
+          Recherche substring dans les modules déjà ingérés. Tu reçois les
+          fichiers stockés tels quels — aucun code n&apos;est généré.
         </p>
         <form className="query" onSubmit={onSubmit} data-testid="software-demand-form">
-          <label htmlFor="q">Ta demande</label>
+          <label htmlFor="q">Requête stock</label>
           <textarea
             id="q"
             name="q"
@@ -118,10 +118,10 @@ export default function HomePage() {
             onChange={(event) => setQuery(event.target.value)}
             required
             rows={3}
-            placeholder='ex. "scheduling software" ou "convert human duration labels"'
+            placeholder='ex. "duration" ou "convert human duration labels"'
           />
           <button type="submit" disabled={pending} data-testid="software-demand-submit">
-            {pending ? "Recherche…" : "Recevoir le logiciel"}
+            {pending ? "Recherche…" : "Chercher dans le stock"}
           </button>
         </form>
       </section>
@@ -146,7 +146,7 @@ export default function HomePage() {
       <section className="result" aria-live="polite" data-testid="software-demand-result">
         <pre>
           {output === ""
-            ? "Le logiciel demandé apparaîtra ici après envoi."
+            ? "Les fichiers stock correspondants apparaîtront ici après envoi."
             : output}
         </pre>
       </section>
