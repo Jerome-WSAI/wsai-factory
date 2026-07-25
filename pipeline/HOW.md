@@ -8,4 +8,6 @@ Render service `factory_backend/server.py` owns ingest + assemble.
 - Proof: `python tools/proof_factory_x10.py --count 10 --seed 42`
 - Probe: `python tools/backend_probe.py --base-url http://127.0.0.1:8787`
 
-Legacy handoff remains at https://wsai-factory-handoff.onrender.com/health (stage webhook).
+Live backend: https://wsai-factory-backend.onrender.com/health  
+Legacy handoff: https://wsai-factory-handoff.onrender.com/health  
+Provision: `python tools/provision_factory_backend.py --wait-attempts 36 --wait-sleep-sec 10`

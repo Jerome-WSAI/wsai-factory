@@ -33,14 +33,18 @@ npm run dev
 - `wsai-factory-handoff` — legacy stage webhook (`handoff/server.py`)
 
 Secrets (backend): `WSAI_FACTORY_WEBHOOK_KEY`, `GROQ_API_KEY`.  
-Until Render creates `wsai-factory-backend`, local `PORT=8787` is the proof path.
+Live backend: https://wsai-factory-backend.onrender.com/health  
+Provision helper: `python tools/provision_factory_backend.py --wait-attempts 36 --wait-sleep-sec 10`
 
 ## Commands
 
 | Command | Role |
 |---------|------|
 | `python tools/proof_factory_x10.py --count 10 --seed 42` | Assemble 10 random stock tools → unzip smoke |
-| `python tools/backend_probe.py --base-url http://127.0.0.1:8787` | Health + 401 auth probes (no secrets) |
+| `python tools/backend_probe.py --base-url https://wsai-factory-backend.onrender.com` | Live health + 401 auth probes (no secrets) |
+| `python tools/render_backend_status.py --require-backend yes` | Render API: service exists + healthy |
+| `python tools/provision_factory_backend.py --wait-attempts 36 --wait-sleep-sec 10` | Create backend service if missing |
+| `python tools/download_token_probe.py --backend-url URL --chatbot-url NONE --job-id JOB --module src` | Order + zip (+ optional chatbot token gate) |
 | `python tools/handoff_probe.py --base-url https://wsai-factory-handoff.onrender.com` | Legacy handoff health + 401 |
 | `python tools/deploy_chatbot.py --prod yes` | Sync stock + Vercel prod (needs WSAI team CLI) |
 
