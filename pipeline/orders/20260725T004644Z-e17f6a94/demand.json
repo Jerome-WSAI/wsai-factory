@@ -1,0 +1,17 @@
+{
+  "order_id": "20260725T004644Z-e17f6a94",
+  "tool_name": "duration-toolkit",
+  "brief": "Outil web pour convertir des labels de durée en millisecondes",
+  "modules": [
+    {
+      "job_id": "20260724T232610Z-duration-toolkit-34dddcde",
+      "module": "src"
+    },
+    {
+      "job_id": "20260725T001735Z-f-local-prototype-c51af246",
+      "module": "frontend"
+    }
+  ],
+  "created_at": "2026-07-25T00:46:44.028Z",
+  "status": "queued"
+}
