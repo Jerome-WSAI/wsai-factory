@@ -14,8 +14,10 @@ def main() -> None:
         "app/layout.tsx",
         "app/globals.css",
         "app/page.module.css",
+        "app/actions.ts",
         "app/api/query/route.ts",
         "app/api/modules/route.ts",
+        "lib/auth.ts",
         "lib/stock.ts",
         "next.config.ts",
         "package.json",
@@ -23,6 +25,7 @@ def main() -> None:
         "tsconfig.json",
         "vercel.json",
         "scripts/ensure-stock.mjs",
+        "eslint.config.mjs",
     ]
     files: list[dict[str, str]] = []
     for rel in wanted:
