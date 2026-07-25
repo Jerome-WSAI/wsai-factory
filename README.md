@@ -55,6 +55,8 @@ Do not re-run the same slug while it remains in `_processed/`.
 |------|----------|
 | `pipeline_automate` with `--polls 1` | exit `1`, `bad_debounce` (`polls must be >= 2`) |
 | `pipeline_automate` on processed slug | exit `1`, `processed_collision` |
+| `stage_docs_local` when job already `stock` | exit `1`, `bad_stage_for_docs` |
+| `advance_stage` when job already terminal `stock` | exit `1`, `already_terminal` |
 | `stock_chatbot_query.py` without `--query` | exit `2` |
 | `POST /api/query` `{"query":""}` with valid secret | HTTP `404` `empty_query` |
 | `POST /api/query` without `x-chatbot-secret` | HTTP `401` `unauthorized` or `secret_not_configured` |

@@ -76,10 +76,17 @@ def assert_can_advance(state: JobState, target_stage: str) -> None:
         )
     current_idx = STAGE_ORDER.index(current)
     target_idx = STAGE_ORDER.index(target_stage)
+    if current_idx >= len(STAGE_ORDER) - 1:
+        raise PipelineError(
+            "already_terminal",
+            f"job already at terminal stage {current!r}; cannot advance to {target_stage!r}",
+            current,
+        )
+    next_stage = STAGE_ORDER[current_idx + 1]
     if target_idx != current_idx + 1:
         raise PipelineError(
             "skip_forbidden",
-            f"must advance {current!r} -> {STAGE_ORDER[current_idx + 1]!r}, not {target_stage!r}",
+            f"must advance {current!r} -> {next_stage!r}, not {target_stage!r}",
             current,
         )
     if target_stage == "docs":
