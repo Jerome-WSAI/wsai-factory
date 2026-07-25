@@ -66,6 +66,12 @@ Do not re-run the same slug while it remains in `_processed/`.
 - External `GET /api/modules` and `POST /api/query` require header `x-chatbot-secret: $CHATBOT_API_SECRET`.
 - Set `CHATBOT_API_SECRET` in Vercel project env (Production) before deploy.
 
+## Vercel deploy team (required)
+
+- Linked project: `chatbot/.vercel/project.json` → WSAI org `team_L3hzaZoX58ujoz7nZSL6znAH` / project `wsai-factory-chatbot`.
+- `python tools/deploy_chatbot.py --prod yes` **preflights** that your CLI can `vercel project ls --scope=<that orgId>`.
+- A personal login (e.g. `whytcard-dev`) is **not** enough: expect `wrong_vercel_team` / `vercel_not_authorized` until you `vercel login` / switch into the **WSAI** team, then set Production `CHATBOT_API_SECRET`, then redeploy.
+
 ## Commands
 
 | Command | Path | Role |

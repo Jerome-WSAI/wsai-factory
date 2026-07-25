@@ -73,7 +73,7 @@ function assertUnderStock(filePath: string, stockRoot: string): void {
 async function parseStockFile(
   filePath: string,
   stockRoot: string,
-): Promise<StockFileHit> {
+): Promise<StockFileHit | null> {
   assertUnderStock(filePath, stockRoot);
   const rel = path.relative(stockRoot, filePath);
   const parts = rel.split(path.sep).filter((part) => part.length > 0);
@@ -93,6 +93,10 @@ async function parseStockFile(
   }
   const relativePath = parts.slice(1).join("/");
   const buf = await fs.readFile(filePath);
+  if (buf.includes(0)) {
+    // Binary stock assets are skipped for text query.
+    return null;
+  }
   const content = buf.toString("utf8").replace(/^\uFEFF/, "");
   return {
     job_id: jobId,
@@ -184,6 +188,9 @@ export async function queryStock(query: string): Promise<StockQueryResult> {
   const hits: StockFileHit[] = [];
   for (const filePath of files) {
     const hit = await parseStockFile(filePath, stockRoot);
+    if (hit === null) {
+      continue;
+    }
     const blob =
       `${hit.job_id} ${hit.module} ${hit.relative_path} ${hit.content}`.toLowerCase();
     if (blob.includes(needle)) {

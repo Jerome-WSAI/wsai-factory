@@ -38,13 +38,17 @@ def run_local_query(query: str) -> Mapping[str, object]:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         check=False,
     )
     if proc.returncode != 0:
         raise SmokeError(
             "local_query_failed",
-            f"exit={proc.returncode} stderr={proc.stderr.strip()}",
+            f"exit={proc.returncode} stderr={(proc.stderr or '').strip()}",
         )
+    if proc.stdout is None:
+        raise SmokeError("local_query_empty", "stdout missing after local query")
     payload = json.loads(proc.stdout)
     if not isinstance(payload, dict):
         raise SmokeError("local_query_shape", "stdout root must be object")

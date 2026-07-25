@@ -57,7 +57,7 @@ def list_stock_files(stock_root: Path) -> list[Path]:
     return sorted(files)
 
 
-def parse_stock_file(path: Path, stock_root: Path) -> StockFileHit:
+def parse_stock_file(path: Path, stock_root: Path) -> StockFileHit | None:
     assert_under_stock(path, stock_root)
     rel = path.relative_to(stock_root)
     parts = rel.parts
@@ -72,12 +72,9 @@ def parse_stock_file(path: Path, stock_root: Path) -> StockFileHit:
     relative_path = Path(*parts[1:]).as_posix()
     try:
         content = path.read_text(encoding="utf-8-sig")
-    except UnicodeDecodeError as exc:
-        raise PipelineError(
-            "stock_not_utf8",
-            f"stock file not utf-8: {path}",
-            "chatbot",
-        ) from exc
+    except UnicodeDecodeError:
+        # Binary / non-UTF8 stock assets are skipped for text query.
+        return None
     return {
         "job_id": job_id,
         "module": module,
@@ -97,6 +94,8 @@ def query_stock(query: str, stock_root: Path) -> StockQueryResult:
     hits: list[StockFileHit] = []
     for path in list_stock_files(stock_root):
         hit = parse_stock_file(path, stock_root)
+        if hit is None:
+            continue
         blob = f"{hit['job_id']} {hit['module']} {hit['relative_path']} {hit['content']}".lower()
         if needle in blob:
             hits.append(hit)
