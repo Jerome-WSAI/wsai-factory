@@ -59,6 +59,8 @@ def http(
             return int(response.status), response.read()
     except urllib.error.HTTPError as exc:
         return int(exc.code), exc.read()
+    except urllib.error.URLError as exc:
+        raise ProbeError("unreachable", f"{url} unreachable: {exc}") from exc
 
 
 def main() -> None:
