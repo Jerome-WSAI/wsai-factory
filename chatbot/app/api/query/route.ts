@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { assertChatbotSecret } from "@/lib/auth";
 import { queryStock, StockQueryError } from "@/lib/stock";
 
 export const runtime = "nodejs";
@@ -17,6 +18,10 @@ function isQueryBody(value: unknown): value is QueryBody {
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
+  const denied = assertChatbotSecret(request);
+  if (denied !== null) {
+    return denied;
+  }
   let payload: unknown;
   try {
     payload = await request.json();

@@ -112,16 +112,52 @@ button:disabled {
   cursor: wait;
 }
 
+.result {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.result .error {
+  color: #8b1e1e;
+  font-weight: 600;
+}
+
+.hits {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.hit {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.75rem;
+  background: var(--panel);
+  border: 1px solid color-mix(in srgb, var(--line) 55%, white);
+  animation: fade 500ms ease both;
+}
+
+.hit-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.hit-meta span {
+  padding: 0.15rem 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--line) 50%, white);
+}
+
 .result pre {
   white-space: pre-wrap;
   word-break: break-word;
   background: rgba(20, 32, 26, 0.92);
   color: #e7f2ea;
   padding: 1.1rem;
-  min-height: 10rem;
+  min-height: 4rem;
   line-height: 1.4;
   font-size: 0.92rem;
-  animation: fade 500ms ease both;
 }
 
 .catalog {

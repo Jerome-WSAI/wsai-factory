@@ -15,7 +15,6 @@ class StockFileHit(TypedDict):
     job_id: str
     module: str
     relative_path: str
-    absolute_path: str
     content: str
 
 
@@ -83,7 +82,6 @@ def parse_stock_file(path: Path, stock_root: Path) -> StockFileHit:
         "job_id": job_id,
         "module": module,
         "relative_path": relative_path,
-        "absolute_path": str(path.resolve()).replace("\\", "/"),
         "content": content,
     }
 
@@ -110,7 +108,7 @@ def query_stock(query: str, stock_root: Path) -> StockQueryResult:
         )
     return {
         "query": query,
-        "stock_root": str(stock_root.resolve()).replace("\\", "/"),
+        "stock_root": "stock",
         "hit_count": len(hits),
         "hits": hits,
         "note": "content is read verbatim from pipeline/stock; no code is generated",

@@ -2,6 +2,8 @@
 
 import { FormEvent, useEffect, useState, useTransition } from "react";
 
+import { loadModulesAction, queryStockAction } from "@/app/actions";
+
 type Hit = {
   job_id: string;
   module: string;
@@ -15,23 +17,24 @@ type ModuleSummary = {
   files: string[];
 };
 
-type OkResponse = {
-  ok: true;
-  result: {
-    hit_count: number;
-    note: string;
-    hits: Hit[];
-  };
-};
-
-type ErrResponse = {
-  ok: false;
-  error: { code: string; message: string };
-};
+function catalogQuery(item: ModuleSummary): string {
+  const fromJob = item.job_id
+    .split("-")
+    .filter((part) => part.length > 2 && !/^\d/.test(part) && part.length < 40);
+  if (fromJob.length > 0) {
+    const candidate = fromJob[0];
+    if (candidate !== undefined) {
+      return candidate;
+    }
+  }
+  return item.job_id;
+}
 
 export default function HomePage() {
   const [query, setQuery] = useState("");
-  const [output, setOutput] = useState("");
+  const [hits, setHits] = useState<Hit[]>([]);
+  const [resultNote, setResultNote] = useState("");
+  const [errorText, setErrorText] = useState("");
   const [modules, setModules] = useState<ModuleSummary[]>([]);
   const [modulesNote, setModulesNote] = useState("");
   const [pending, startTransition] = useTransition();
@@ -39,21 +42,16 @@ export default function HomePage() {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const response = await fetch("/api/modules");
-      const data = (await response.json()) as {
-        ok: boolean;
-        result?: { modules: ModuleSummary[]; note: string };
-        error?: { message: string };
-      };
+      const data = await loadModulesAction();
       if (cancelled) {
         return;
       }
-      if (data.ok && data.result !== undefined) {
+      if (data.ok) {
         setModules(data.result.modules);
         setModulesNote(data.result.note);
         return;
       }
-      setModulesNote(data.error?.message ?? "stock listing failed");
+      setModulesNote(`${data.error.code}: ${data.error.message}`);
     })();
     return () => {
       cancelled = true;
@@ -63,39 +61,16 @@ export default function HomePage() {
   function onSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     startTransition(async () => {
-      const response = await fetch("/api/query", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-      });
-      const text = await response.text();
-      try {
-        const data = JSON.parse(text) as OkResponse | ErrResponse;
-        if (data.ok) {
-          const blocks = data.result.hits.map((hit) => {
-            return [
-              `job: ${hit.job_id}`,
-              `module: ${hit.module}`,
-              `path: ${hit.relative_path}`,
-              "---",
-              hit.content,
-            ].join("\n");
-          });
-          setOutput(
-            [
-              "Fichiers stock (verbatim) :",
-              data.result.note,
-              `fichiers: ${data.result.hit_count}`,
-              "",
-              ...blocks,
-            ].join("\n\n"),
-          );
-          return;
-        }
-        setOutput(`${data.error.code}: ${data.error.message}`);
-      } catch {
-        setOutput(text);
+      const data = await queryStockAction(query);
+      if (data.ok) {
+        setHits(data.result.hits);
+        setResultNote(data.result.note);
+        setErrorText("");
+        return;
       }
+      setHits([]);
+      setResultNote("");
+      setErrorText(`${data.error.code}: ${data.error.message}`);
     });
   }
 
@@ -118,7 +93,7 @@ export default function HomePage() {
             onChange={(event) => setQuery(event.target.value)}
             required
             rows={3}
-            placeholder='ex. "duration" ou "convert human duration labels"'
+            placeholder='ex. "duration" ou "timer"'
           />
           <button type="submit" disabled={pending} data-testid="software-demand-submit">
             {pending ? "Recherche…" : "Chercher dans le stock"}
@@ -134,7 +109,7 @@ export default function HomePage() {
               <button
                 type="button"
                 className="ghost"
-                onClick={() => setQuery(item.module)}
+                onClick={() => setQuery(catalogQuery(item))}
               >
                 {item.job_id}/{item.module}
               </button>
@@ -144,11 +119,34 @@ export default function HomePage() {
         </ul>
       </section>
       <section className="result" aria-live="polite" data-testid="software-demand-result">
-        <pre>
-          {output === ""
-            ? "Les fichiers stock correspondants apparaîtront ici après envoi."
-            : output}
-        </pre>
+        {errorText !== "" ? <p className="error">{errorText}</p> : null}
+        {errorText === "" && hits.length === 0 ? (
+          <p className="lede">
+            Les fichiers stock correspondants apparaîtront ici après envoi.
+          </p>
+        ) : null}
+        {hits.length > 0 ? (
+          <div className="hits">
+            <p className="lede">
+              {resultNote} · {hits.length} fichier(s)
+            </p>
+            {hits.map((hit) => (
+              <article
+                key={`${hit.job_id}/${hit.relative_path}`}
+                className="hit"
+              >
+                <header>
+                  <p className="hit-meta">
+                    <span>{hit.job_id}</span>
+                    <span>{hit.module}</span>
+                    <span>{hit.relative_path}</span>
+                  </p>
+                </header>
+                <pre>{hit.content}</pre>
+              </article>
+            ))}
+          </div>
+        ) : null}
       </section>
     </main>
   );
