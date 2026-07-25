@@ -53,6 +53,7 @@ Do not re-run the same slug while it remains in `_processed/`.
 
 | Case | Expected |
 |------|----------|
+| `pipeline_automate` with `--polls 1` | exit `1`, `bad_debounce` (`polls must be >= 2`) |
 | `pipeline_automate` on processed slug | exit `1`, `processed_collision` |
 | `stock_chatbot_query.py` without `--query` | exit `2` |
 | `POST /api/query` `{"query":""}` with valid secret | HTTP `404` `empty_query` |
