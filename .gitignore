@@ -16,6 +16,10 @@ pipeline/**/.next/
 pipeline/**/.turbo/
 pipeline/inbox/_processed/
 pipeline/_failed/
+pipeline/proof_x10/
+pipeline/deliveries/
+pipeline/orders_state/
+pipeline/assembled/
 
 # Cursor local ephemeral
 .cursor/corpus/

@@ -1,5 +1,26 @@
 services:
   - type: web
+    name: wsai-factory-backend
+    runtime: python
+    plan: pro_ultra
+    region: frankfurt
+    branch: main
+    buildCommand: pip install -r factory_backend/requirements.txt
+    startCommand: python factory_backend/server.py
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: WSAI_FACTORY_WEBHOOK_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: FACTORY_CORS_ORIGIN
+        value: https://wsai-factory-chatbot.vercel.app
+      - key: FACTORY_INBOX_POLL_SEC
+        value: "5"
+  - type: web
     name: wsai-factory-handoff
     runtime: python
     plan: pro_ultra

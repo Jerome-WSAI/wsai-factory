@@ -1,87 +1,48 @@
-# wsai-factory
+# WSAI Factory
 
-Private orchestration factory: ingest projects → strip → official docs → align → modules → stock.
+Runtime: **factory_backend** on Render (agents + pipeline dynamique). Chatbot = Groq → backend → ZIP.
 
-## How it works
+## Cas d'usage
 
-See `pipeline/HOW.md`.
+1. Déposer un projet dans `pipeline/inbox/<slug>/` (scan auto si `FACTORY_INBOX_POLL_SEC>0`, ou `POST /inbox/scan`)
+2. Chatbot prod discute le besoin → `POST /chat` backend → assemblage modules+frontend → ZIP
+3. Téléchargement ZIP via chatbot `/api/download/<order_id>`
+4. Preuve: `python tools/proof_factory_x10.py --count 10 --seed 42`
 
-## First 5 minutes
+## Local
 
 ```text
-# 1) Create a NEW inbox slug (do not reuse a processed one)
-mkdir pipeline\inbox\my-slug\src
-# put package.json + source under pipeline/inbox/my-slug/
+# Backend
+$env:PORT=8787
+$env:WSAI_FACTORY_WEBHOOK_KEY=...
+$env:GROQ_API_KEY=...
+$env:FACTORY_INBOX_POLL_SEC=5
+python factory_backend/server.py
 
-# 2) Local full pipeline → stock
-python tools/pipeline_automate.py --slug my-slug --polls 2 --interval-sec 0.5
-
-# 3) Chatbot UI (server actions read chatbot/stock; no API secret needed in browser)
+# Chatbot
+# chatbot/.env.local: FACTORY_BACKEND_URL, WSAI_FACTORY_WEBHOOK_KEY, GROQ via backend
 cd chatbot
 npm run sync-stock
 npm run dev
-# open http://localhost:3000 — try query: duration
 ```
 
-## Quick local
+## Render
 
-```text
-# 1) Local full pipeline
-python tools/pipeline_automate.py --slug <slug> --polls 2 --interval-sec 0.5
+`render.yaml` defines:
+- `wsai-factory-backend` — ingest/chat/assemble/ZIP (`factory_backend/server.py`)
+- `wsai-factory-handoff` — legacy stage webhook (`handoff/server.py`)
 
-# 2) Local inbox worker (loop)
-python tools/worker_start.py --worker inbox_loop --polls 2 --interval-sec 1 --loop-sleep-sec 5
-
-# 3) Cloud ingress: put project in pipeline/inbox/<slug>/ then
-python tools/push_inbox.py --slug <slug> --commit yes --push yes
-# → triggers Cursor Automation on Push (see automations/inbox.md)
-
-# 4) Sync + deploy chatbot (stock + production)
-python tools/deploy_chatbot.py --prod yes
-```
-
-### processed_collision recovery
-
-If `pipeline_automate` fails with `[processed_collision@inbox] already processed slug exists`, the slug already lives under `pipeline/inbox/_processed/<slug>/`. Recovery:
-
-1. Use a **new** slug directory under `pipeline/inbox/<new-slug>/`, or
-2. Move/remove `pipeline/inbox/_processed/<slug>/` only if you intentionally want to re-ingest that slug, then put sources back under `pipeline/inbox/<slug>/`.
-
-Do not re-run the same slug while it remains in `_processed/`.
-
-### Edge matrix (expected exits / HTTP)
-
-| Case | Expected |
-|------|----------|
-| `pipeline_automate` with `--polls 1` | exit `1`, `bad_debounce` (`polls must be >= 2`) |
-| `pipeline_automate` on processed slug | exit `1`, `processed_collision` |
-| `stage_docs_local` when job already `stock` | exit `1`, `bad_stage_for_docs` |
-| `advance_stage` when job already terminal `stock` | exit `1`, `already_terminal` |
-| `stock_chatbot_query.py` without `--query` | exit `2` |
-| `POST /api/query` `{"query":""}` with valid secret | HTTP `404` `empty_query` |
-| `POST /api/query` without `x-chatbot-secret` | HTTP `401` `unauthorized` or `secret_not_configured` |
-| `POST /api/query` `{"query":"duration"}` with secret | HTTP `200`, JSON must not contain `absolute_path` |
-
-## Chatbot API auth
-
-- Browser UI uses **server actions** (no secret in the client).
-- External `GET /api/modules` and `POST /api/query` require header `x-chatbot-secret: $CHATBOT_API_SECRET`.
-- Set `CHATBOT_API_SECRET` in Vercel project env (Production) before deploy.
-
-## Vercel deploy team (required)
-
-- Linked project: `chatbot/.vercel/project.json` → WSAI org `team_L3hzaZoX58ujoz7nZSL6znAH` / project `wsai-factory-chatbot`.
-- `python tools/deploy_chatbot.py --prod yes` **preflights** that your CLI can `vercel project ls --scope=<that orgId>`.
-- A personal login (e.g. `whytcard-dev`) is **not** enough: expect `wrong_vercel_team` / `vercel_not_authorized` until you `vercel login` / switch into the **WSAI** team, then set Production `CHATBOT_API_SECRET`, then redeploy.
+Secrets (backend): `WSAI_FACTORY_WEBHOOK_KEY`, `GROQ_API_KEY`.  
+Until Render creates `wsai-factory-backend`, local `PORT=8787` is the proof path.
 
 ## Commands
 
-| Command | Path | Role |
-|---------|------|------|
-| `/verify-loop` | `.cursor/commands/verify-loop.md` | Boucle docs + anti-fake + essais réels |
-| `/factory-push-inbox` | `.cursor/commands/factory-push-inbox.md` | Commit/push inbox vers GitHub pour Automations |
-| smoke | `python tools/chatbot_smoke.py` | Auth + path-leak + local stock probes |
-| deploy | `python tools/deploy_chatbot.py --prod yes` | sync stock → vercel prod |
+| Command | Role |
+|---------|------|
+| `python tools/proof_factory_x10.py --count 10 --seed 42` | Assemble 10 random stock tools → unzip smoke |
+| `python tools/backend_probe.py --base-url http://127.0.0.1:8787` | Health + 401 auth probes (no secrets) |
+| `python tools/handoff_probe.py --base-url https://wsai-factory-handoff.onrender.com` | Legacy handoff health + 401 |
+| `python tools/deploy_chatbot.py --prod yes` | Sync stock + Vercel prod (needs WSAI team CLI) |
 
 ## Repo
 
