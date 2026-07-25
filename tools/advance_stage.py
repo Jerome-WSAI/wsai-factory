@@ -137,9 +137,16 @@ def assert_can_advance(state: JobState, target_stage: str) -> None:
 
 
 def post_webhook(url: str, payload: dict[str, object], api_key: str) -> None:
-    headers = {"Content-Type": "application/json"}
-    if api_key != "":
-        headers["Authorization"] = f"Bearer {api_key}"
+    if api_key.strip() == "":
+        raise PipelineError(
+            "missing_webhook_key",
+            "webhook Bearer token must be non-empty",
+            "advance",
+        )
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key.strip()}",
+    }
     body = json.dumps(payload).encode("utf-8")
     request = urllib.request.Request(
         url,
@@ -232,13 +239,14 @@ def main() -> None:
         updated = state
         if args.webhook_url != "NONE":
             api_key = os.environ.get("WSAI_FACTORY_WEBHOOK_KEY")
-            if not isinstance(api_key, str):
+            if not isinstance(api_key, str) or api_key.strip() == "":
                 raise PipelineError(
                     "missing_webhook_key",
-                    "env WSAI_FACTORY_WEBHOOK_KEY required when webhook-url is not NONE",
+                    "env WSAI_FACTORY_WEBHOOK_KEY must be a non-empty string when "
+                    "webhook-url is not NONE (empty string must not skip Bearer)",
                     "advance",
                 )
-            post_webhook(args.webhook_url, payload, api_key)
+            post_webhook(args.webhook_url, payload, api_key.strip())
             updated = {
                 **updated,
                 "webhook_last_stage": args.to_stage,
